@@ -1,0 +1,37 @@
+[
+ {
+  "num": 1,
+  "name": "123456789",
+  "count": 10149
+ },
+ {
+  "num": 1,
+  "name": "o",
+  "count": 1074
+ },
+ {
+  "num": 1,
+  "name": "0000",
+  "count": 694
+ },
+ {
+  "num": 2,
+  "name": "00000",
+  "count": 694
+ },
+ {
+  "num": 1,
+  "name": "000",
+  "count": 656
+ },
+ {
+  "num": 1,
+  "name": "dgfdgdfgdfgfd",
+  "count": 450
+ },
+ {
+  "num": 1,
+  "name": "0",
+  "count": 268
+ }
+]
