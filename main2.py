@@ -212,16 +212,15 @@ images = {
 game_objects = {
 
 }
+black_life = {}
+time5 = 300
 users = []
 flag9 = True
 num = 0
 a = 10000
 t = 0
 list_count = []
-#entry = ttk.Entry()
-#leb = Label(tk, text="Имя", font=("Ariel", 25))
 columns = ("№", "name", "count")
-# tree = ttk.Treeview(columns=columns, show="headings")
 def show_message():
     global count, num, flag9, users, leb3
     if flag9:
@@ -246,7 +245,6 @@ def show_message():
         print(users[art]["name"])
         flag9 = False
 
-#btn = ttk.Button(text="Click", command=show_message)
 game_btn = ImageTk.PhotoImage(Image.open("Background/KPNF2945.PNG"))
 restart = ImageTk.PhotoImage(Image.open("images/restart.png"))
 tab_lid = ImageTk.PhotoImage(Image.open("images/tabl_new.png"))
@@ -304,7 +302,6 @@ def menn():
         lab2 = Label(tk, textvariable=random_var, font=("Comic Sans MS", 25), fg="black")
         lab2.grid(row=0, column=1)
 
-#btn4 = Button(tk, text="<", command=menn)
 
 def draw_menu2():
     global station, entry, leb, leb2, num, btn4, lab, lab2, leb3
@@ -363,7 +360,7 @@ def click(event):
             station = "menu"
 
 def click2(event):
-    global station, is_playing, time0, flag, life, tree, flag3, flag4, flag5, flag6, flag7, flag9, flag10, tree, leb, entry, btn4, btn, num, users, count, count2, tree2, tree3, leb2
+    global station, is_playing, time0, flag, life, tree, flag3, flag4, flag5, flag6, flag7, flag9, flag10, tree, leb, entry, btn4, btn, num, users, count, count2, tree2, tree3, leb2, leb3
     if 150 < event.x < 1134 and 130 < event.y < 320 and is_playing == False and station == "menu2":
         clear()
         flag10 = False
@@ -384,6 +381,7 @@ def click2(event):
         entry = ttk.Entry(width=30, font=("Ariel", 20))
         leb = Label(tk, text="Топ 120 лучших игроков!", font=("Ariel", 25), foreground="white", background="black")
         leb2 = Label(tk, text="Введите ник ниже:", font=("Ariel", 25), foreground="white", background="black")
+        leb3 = Label(tk, font=("Ariel", 25), foreground="white", background="black")
         btn4 = Button(tk, text="<", command=menn, width=10, height=3, foreground="white", background="black")
         tree = ttk.Treeview(columns=columns, show="headings", height=45, style="BW.TLabel")
 
@@ -400,7 +398,6 @@ def click2(event):
             users = []
 
         for person in users:
-            print(person)
             if flag10:
                 tree.insert("", END, values=(person["num"], person["name"], person["count"]), tags="tree")
                 tree.tag_configure("tree", font=("Ariel", 13))
@@ -421,7 +418,7 @@ c.bind("<Button-1>", pusk)
 
 
 def gameloop():
-    global station, is_playing, time0, flag3
+    global station, is_playing, time0
     if station == "menu":
         is_playing = False
         draw_menu()
@@ -434,7 +431,6 @@ def gameloop():
     if station == "game":
         is_playing = True
         time0 += 20
-
     c.after(20, gameloop)
 
 
@@ -638,47 +634,42 @@ def same_color(bullet, block):
     if res2 == current_bullet:
         return True
 
-f = True
-def is_neightboor(block):
-    global q, f
-    for neightboor in blocks[:]:
-        print("Cосед: " + str(neightboor.x))
-        if block.x - 136 == neightboor.x and block.x-136 not in visited:
-            q.append([block.x - 136, block.y, neightboor.color])
-        if block.x + 136 == neightboor.x and block.x+136 not in visited:
-            q.append([block.x + 136, block.y, neightboor.color])
-        if block.y - 136 == neightboor.y and block.y-136 not in visited:
-            q.append([block.x, block.y - 136, neightboor.color])
-        if block.y + 136 == neightboor.y and block.y+136 not in visited:
-            q.append([block.x, block.y + 136, neightboor.color])
-        while len(q) != 0:
-            px, py, color3 = q[0]
-            # if px in visited:
-            #     q.remove(q[0])
-            print(q, visited)
-            visited.append(px)
-            visited.append(py)
-            visited.append(color3)
-            #print(px, color3)
-            if abs(px - block.x) == 136 and py == block.y:
-                print(2)
-                if color3 == "green":
-                    print("Block around: " + str(px))
-                    if px - 136 == neightboor.x and px - 136 not in visited:
-                        q.append([px - 136, py, neightboor.color])
-                        #print(neightboor.color)
-                    if px + 136 == neightboor.x and px + 136 not in visited:
-                        q.append([px + 136, py, neightboor.color])
-                    #del q[0]
-                    return True
-            if px == block.x and abs(py - block.y) == 136 and color3 == "green":
-                if py - 136 == neightboor.y and py - 136 not in visited:
-                    q.append([px, py - 136, neightboor.color])
-                if py + 136 == neightboor.y and py + 136 not in visited:
-                    q.append([px, py + 136, neightboor.color])
-                return True
-        #print(q)
 
+def is_neightboor(block, neightboor):
+        if abs(neightboor.x - block.x) == 136 and neightboor.y == block.y:
+            return True
+        if neightboor.x == block.x and abs(neightboor.y - block.y) == 136:
+            return True
+
+
+def life_funk():
+    global life, flag15, flag
+
+    life -= 1
+    if life == 4:
+        black_life["life1"] = c.create_image(330, 950, image=images["black_hp"], tag='down2',
+                                             anchor=NW)
+        flag15 = True
+        c.tag_raise(game_objects["aim"], game_objects["aim2"])
+    if life == 3:
+        black_life["life2"] = c.create_image(250, 950, image=images["black_hp"], tag='down2',
+                                             anchor=NW)
+        flag15 = True
+        c.tag_raise(game_objects["aim"], game_objects["aim2"])
+    if life == 2:
+        black_life["life3"] = c.create_image(170, 950, image=images["black_hp"], tag='down2',
+                                             anchor=NW)
+        flag15 = True
+        c.tag_raise(game_objects["aim"], game_objects["aim2"])
+    if life == 1:
+        black_life["life4"] = c.create_image(90, 950, image=images["black_hp"], tag='down2',
+                                             anchor=NW)
+        flag15 = True
+        c.tag_raise(game_objects["aim"], game_objects["aim2"])
+    if life == 0:
+        black_life["life5"] = c.create_image(10, 950, image=images["black_hp"], tag='down2',
+                                             anchor=NW)
+        flag = "False"
 
 
 def delete_block(block):
@@ -693,28 +684,10 @@ def delete_bullet(bullet):
     del bullet
     c.delete(b1)
 
-
-"""
-for bullet in bullets:
-    if is_finished(bullet):
-        for block in blocks[:]:
-            if should_hit(bullet, block):
-                if same_color(bullet, block):
-                    for neightboor in blocks[:]:
-                        if is_neightboor(neightboor, block) and same_color(bullet, neightboor):
-                            delete_block(neightboor)
-                else:
-                    decrease_points()
-        delete_bullet(bullet)
-"""
-
-black_life = {}
-time5 = 300
-time6 = 0
-gggg = 1
 def Player():
-    global count, life, flag, time2, time4, a, t, count2, time5, gggg, flag15, f
+    global count, time2, time4, a, t, count2, time5, flag15
     should_delete = []
+    neightboor2 = []
     time4 += 5
     if time5 != 0 and flag15:
         time5 -= 5
@@ -733,46 +706,17 @@ def Player():
             for block in blocks[:]:
                 if bullet_intersects_block(bullet, block):
                     if not same_color(bullet, block):
-                        life -= 1
-                        if life == 4:
-                            black_life["life1"] = c.create_image(330, 950, image=images["black_hp"], tag='down2',
-                                                                 anchor=NW)
-                            flag15 = True
-                            c.tag_raise(game_objects["aim"], game_objects["aim2"])
-                        if life == 3:
-                            black_life["life2"] = c.create_image(250, 950, image=images["black_hp"], tag='down2',
-                                                                 anchor=NW)
-                            flag15 = True
-                            c.tag_raise(game_objects["aim"], game_objects["aim2"])
-                        if life == 2:
-                            black_life["life3"] = c.create_image(170, 950, image=images["black_hp"], tag='down2',
-                                                                 anchor=NW)
-                            flag15 = True
-                            c.tag_raise(game_objects["aim"], game_objects["aim2"])
-                        if life == 1:
-                            black_life["life4"] = c.create_image(90, 950, image=images["black_hp"], tag='down2',
-                                                                 anchor=NW)
-                            flag15 = True
-                            c.tag_raise(game_objects["aim"], game_objects["aim2"])
-                        if life == 0:
-                            black_life["life5"] = c.create_image(10, 950, image=images["black_hp"], tag='down2',
-                                                                 anchor=NW)
-                            flag = "False"
+                        life_funk()
                         bullets.remove(bullet)
                         delete_bullet(bullet.image)
                         break
-                    for neightboor in blocks[:]:
-                        if is_neightboor(block) and same_color(bullet, neightboor):
-                            f = False
-                            if neightboor not in should_delete:
-                                should_delete.append(neightboor)
-
-                    if block not in should_delete:
+                    else:
                         should_delete.append(block)
-                    bullets.remove(bullet)
-                    delete_bullet(bullet.image)
-                    break
-        for block in should_delete:
+                        bullets.remove(bullet)
+                        delete_bullet(bullet.image)
+                        break
+
+        for _ in should_delete:
             rand = random.randint(100, 501)
             count += rand
             list_count.append(rand)
@@ -782,11 +726,22 @@ def Player():
             if count2 >= a:
                 count2 = 0
                 time2 -= 400
-            #print(" Счет: " + str(count2) + '\n', "Теорема времени: " + str(a) + '\n', "Время: " + str(t) +
-            #      '\n', "Время игры: " + str(time4) + '\n', "time2: " + str(time2) + '\n',
-            #      "----------------------------------")
+
+            print(" Счет: " + str(count2) + '\n', "Теорема времени: " + str(a) + '\n', "Время: " + str(t) +
+                  '\n', "Время игры: " + str(time4) + '\n', "time2: " + str(time2) + '\n',
+                  "----------------------------------")
             random_var.set(str(count))
-            delete_block(block)
+
+        while len(should_delete) != 0:
+            for block in should_delete:
+                for neightboor in blocks[:]:
+                    if is_neightboor(block, neightboor) and same_color(block, neightboor):
+                        if neightboor not in should_delete:
+                            neightboor2.append(neightboor)
+            for block in should_delete:
+                delete_block(block)
+            should_delete = neightboor2
+            neightboor2 = []
     c.after(5, Player)
 
 
@@ -794,8 +749,9 @@ c.after(5, Player)
 
 
 def Player2():
-    global count, life, flag, time2, count2, time5, flag15
+    global count, time2, count2, time5, flag15
     should_delete_blue = []
+    neightboor2 = []
     if time5 != 0 and flag15:
         time5 -= 5
     if time5 == 0:
@@ -810,45 +766,18 @@ def Player2():
             for block in blocks[:]:
                 if bullet_intersects_block_blue(bullet, block):
                     if not same_color(bullet, block):
-                        life -= 1
-                        if life == 4:
-                            black_life["life1"] = c.create_image(330, 950, image=images["black_hp"], tag='down2',
-                                                                 anchor=NW)
-                            flag15 = True
-                            c.tag_raise(game_objects["aim"], game_objects["aim2"])
-
-                        if life == 3:
-                            black_life["life2"] = c.create_image(250, 950, image=images["black_hp"], tag='down2',
-                                                                 anchor=NW)
-                            flag15 = True
-                            c.tag_raise(game_objects["aim"], game_objects["aim2"])
-                        if life == 2:
-                            black_life["life3"] = c.create_image(170, 950, image=images["black_hp"], tag='down2',
-                                                                 anchor=NW)
-                            flag15 = True
-                            c.tag_raise(game_objects["aim"], game_objects["aim2"])
-                        if life == 1:
-                            black_life["life4"] = c.create_image(90, 950, image=images["black_hp"], tag='down2',
-                                                                 anchor=NW)
-                            flag15 = True
-                            c.tag_raise(game_objects["aim"], game_objects["aim2"])
-                        if life == 0:
-                            black_life["life5"] = c.create_image(10, 950, image=images["black_hp"], tag='down2',
-                                                                 anchor=NW)
-                            flag = "False"
+                        life_funk()
                         bullet_blue.remove(bullet)
                         delete_bullet(bullet.image)
                         break
-                    for neightboor in blocks[:]:
-                        if is_neightboor(neightboor, block) and same_color(bullet, neightboor):
-                            if neightboor not in should_delete_blue:
-                                should_delete_blue.append(neightboor)
-                    if block not in should_delete_blue:
+
+                    else:
                         should_delete_blue.append(block)
-                    bullet_blue.remove(bullet)
-                    delete_bullet(bullet.image)
-                    break
-        for block in should_delete_blue:
+                        bullet_blue.remove(bullet)
+                        delete_bullet(bullet.image)
+                        break
+
+        for _ in should_delete_blue:
             rand = random.randint(100, 501)
             count += rand
             list_count.append(rand)
@@ -862,7 +791,17 @@ def Player2():
                   '\n', "Время игры: " + str(time4) + '\n', "time2: " + str(time2) + '\n',
                   "----------------------------------")
             random_var.set(str(count))
-            delete_block(block)
+
+        while len(should_delete_blue) != 0:
+            for block in should_delete_blue:
+                for neightboor in blocks[:]:
+                    if is_neightboor(block, neightboor) and same_color(block, neightboor):
+                        if neightboor not in should_delete_blue:
+                            neightboor2.append(neightboor)
+            for block in should_delete_blue:
+                delete_block(block)
+            should_delete_blue = neightboor2
+            neightboor2 = []
     c.after(5, Player2)
 
 
@@ -870,8 +809,9 @@ c.after(5, Player2)
 
 
 def Player3():
-    global count, life, flag, time2, count2, time5, flag15
+    global count, time2, count2, time5, flag15
     should_delete_red = []
+    neightboor2 = []
     if time5 != 0 and flag15:
         time5 -= 5
     if time5 == 0:
@@ -885,44 +825,16 @@ def Player3():
             for block in blocks[:]:
                 if bullet_intersects_block_red(bullet, block):
                     if not same_color(bullet, block):
-                        life -= 1
-                        if life == 4:
-                            black_life["life1"] = c.create_image(330, 950, image=images["black_hp"], tag='down2',
-                                                                 anchor=NW)
-                            flag15 = True
-                            c.tag_raise(game_objects["aim"], game_objects["aim2"])
-                        if life == 3:
-                            black_life["life2"] = c.create_image(250, 950, image=images["black_hp"], tag='down2',
-                                                                 anchor=NW)
-                            flag15 = True
-                            c.tag_raise(game_objects["aim"], game_objects["aim2"])
-                        if life == 2:
-                            black_life["life3"] = c.create_image(170, 950, image=images["black_hp"], tag='down2',
-                                                                 anchor=NW)
-                            flag15 = True
-                            c.tag_raise(game_objects["aim"], game_objects["aim2"])
-                        if life == 1:
-                            black_life["life4"] = c.create_image(90, 950, image=images["black_hp"], tag='down2',
-                                                                 anchor=NW)
-                            flag15 = True
-                            c.tag_raise(game_objects["aim"], game_objects["aim2"])
-                        if life == 0:
-                            black_life["life5"] = c.create_image(10, 950, image=images["black_hp"], tag='down2',
-                                                                 anchor=NW)
-                            flag = "False"
+                        life_funk()
                         bullet_red.remove(bullet)
                         delete_bullet(bullet.image)
                         break
-                    for neightboor in blocks[:]:
-                        if is_neightboor(neightboor, block) and same_color(bullet, neightboor):
-                            if neightboor not in should_delete_red:
-                                should_delete_red.append(neightboor)
-                    if block not in should_delete_red:
+                    else:
                         should_delete_red.append(block)
-                    bullet_red.remove(bullet)
-                    delete_bullet(bullet.image)
-                    break
-        for block in should_delete_red:
+                        bullet_red.remove(bullet)
+                        delete_bullet(bullet.image)
+                        break
+        for _ in should_delete_red:
             rand = random.randint(100, 501)
             count += rand
             list_count.append(rand)
@@ -936,7 +848,17 @@ def Player3():
                   '\n', "Время игры: " + str(time4) + '\n', "time2: " + str(time2) + '\n',
                   "----------------------------------")
             random_var.set(str(count))
-            delete_block(block)
+
+        while len(should_delete_red) != 0:
+            for block in should_delete_red:
+                for neightboor in blocks[:]:
+                    if is_neightboor(block, neightboor) and same_color(block, neightboor):
+                        if neightboor not in should_delete_red:
+                            neightboor2.append(neightboor)
+            for block in should_delete_red:
+                delete_block(block)
+            should_delete_red = neightboor2
+            neightboor2 = []
     c.after(5, Player3)
 
 
@@ -1032,6 +954,8 @@ def you_lose():
         draw_menu2()
 
     c.after(50, you_lose)
+
+
 c.after(50, you_lose)
 
 tk.bind("<KeyPress>", TK_PRESS)
